@@ -20,66 +20,60 @@ let port:Int32 = 23
 
 class ViewController: UIViewController {
 
+    let client = TCPClient(address: address1, port: port)
+
+    @IBOutlet var readBtn: UIButton!
+    @IBOutlet var enterBtn: UIButton!
+    @IBOutlet var connectBtn: UIButton!
+
+    @IBOutlet var displayLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        ///* Uint8 check
-        //let aa = "&#x570B"
+        let aa = "國"
+        let arr:[UInt8] = Array(aa.utf8)
+        DLog(message: arr)
 
 
-        connect()
-
-        //let data: Data = // ... Bytes you want to send
-        //let result = client.send(data: data)
+        //connect()
 
     }
 
+    @IBAction func btnClick(_ sender: UIButton) {
+        switch sender {
+        case readBtn:
+            if var data = client.read(1024*10){
+                DLog(message: "data count = \(data.count)")
+                var myBreak = true
+                while myBreak == true{
+                    if let string = String(bytes: data, encoding: .ascii) {
+                        displayLabel.text = string
+                        print(string)
+                        myBreak = false
+                    } else {
+                        data.removeLast()
+                    }
+                }
+                //DLog(message: data)
+                DLog(message: "data count = \(data.count)")
+            }else{
+                DLog(message: "my fail read")
+            }
+        case enterBtn:
+            let data:[UInt8] = [13] //return key(Enter)
+            let result = self.client.send(data: data)
+        case connectBtn:
+            connect()
+        default:
+            DLog(message: "btn click fail")
+        }
+    }
+
+
     func connect(){
-        let client = TCPClient(address: address1, port: port)
         switch client.connect(timeout: 10) {
         case .success:
             DLog(message: "connect success")
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                if var data = client.read(1024*10){
-                    var myBreak = true
-                    while myBreak == true{
-                        if let string = String(bytes: data, encoding: .utf8) {
-                            print(string)
-                            myBreak = false
-                        } else {
-                            data.removeLast()
-                        }
-                    }
-                    DLog(message: data)
-                }else{
-                    DLog(message: "fail 1")
-                }
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
-                //let data2: Data = "wr".data(using: .utf8)!// ... Bytes you want to send
-                let data2:[UInt8] = [13]
-                let result = client.send(data: data2)
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 8) {
-                if var data = client.read(1024*10){
-                    var myBreak = true
-                    while myBreak == true{
-                        if let string = String(bytes: data, encoding: .utf8) {
-                            print(string)
-                            myBreak = false
-                        } else {
-                            data.removeLast()
-                        }
-                    }
-                    DLog(message: data)
-                }else{
-                    DLog(message: "fail 1")
-                }
-            }
-
         case .failure(let error):
             DLog(message: error)
         default:
