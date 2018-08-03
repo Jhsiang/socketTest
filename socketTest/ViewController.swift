@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftSocket
+
 //import Darwin.ncurses
 
 
@@ -30,23 +31,55 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let aa = "國"
+        // string to Uint8Array tested
+        let aa = "中\n 中"
         let arr:[UInt8] = Array(aa.utf8)
+        DLog(message: arr.map{String($0, radix:16)})
         DLog(message: arr)
+        print("")
 
+        /*
+        // Uint8Array to String test
+        let myArr:[UInt8] = [229, 156, 139]
+        if let str = convertUInt8ArrToStr(uint8: myArr){
+            DLog(message: str)
+            DLog(message: str.removingPercentEncoding)
+        }else{
+            DLog(message: "convert str fail")
+        }
+        print("")
+        */
 
-        //connect()
+        // short test
+        let myArr2:[UInt8] = [72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 48, 32, 79, 75, 13, 10, 13, 10, 32, 32, 32, 32, 32, 163, 187, 32]
+        if let str = convertUInt8ArrToStr(uint8: myArr2){
+            DLog(message: str)
+            DLog(message: str.removingPercentEncoding)
+        }else{
+            DLog(message: "convert str fail")
+        }
+        print("")
+
+        // total test
+        if let str = convertUInt8ArrToStr(uint8: totalArr){
+            DLog(message: str)
+            DLog(message: str.removingPercentEncoding)
+        }else{
+            DLog(message: "convert str fail")
+        }
+
 
     }
 
     @IBAction func btnClick(_ sender: UIButton) {
         switch sender {
+
         case readBtn:
             if var data = client.read(1024*10){
                 DLog(message: "data count = \(data.count)")
                 var myBreak = true
                 while myBreak == true{
-                    if let string = String(bytes: data, encoding: .ascii) {
+                    if let string = convertUInt8ArrToStr(uint8: data){
                         displayLabel.text = string
                         print(string)
                         myBreak = false
@@ -59,11 +92,45 @@ class ViewController: UIViewController {
             }else{
                 DLog(message: "my fail read")
             }
+
         case enterBtn:
-            let data:[UInt8] = [13] //return key(Enter)
-            let result = self.client.send(data: data)
+            /*
+             let data:[UInt8] = [13] //return key(Enter)
+             let result = self.client.send(data: data)
+             */
+            DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+                let data:[UInt8] = telnetDic["g"]!
+                let result = self.client.send(data: data)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+                let data:[UInt8] = telnetDic["u"]!
+                let result = self.client.send(data: data)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+                let data:[UInt8] = telnetDic["e"]!
+                let result = self.client.send(data: data)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now()+4) {
+                let data:[UInt8] = telnetDic["s"]!
+                let result = self.client.send(data: data)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+                let data:[UInt8] = telnetDic["t"]!
+                let result = self.client.send(data: data)
+            }
+//            DispatchQueue.main.asyncAfter(deadline: .now()+6) {
+//                let data:[UInt8] = telnetDic["."]!
+//                let result = self.client.send(data: data)
+//            }
+            DispatchQueue.main.asyncAfter(deadline: .now()+7) {
+                let data:[UInt8] = telnetDic["enter"]!
+                let result = self.client.send(data: data)
+            }
+            break
+
         case connectBtn:
             connect()
+
         default:
             DLog(message: "btn click fail")
         }
