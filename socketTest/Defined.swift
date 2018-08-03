@@ -30,6 +30,7 @@ func convertUInt8ArrToStr(uint8:[UInt8]) -> String? {
     let big5encoding = String.Encoding(rawValue: nsEnc) // String.Encoding
 
     if let str = String(bytes: uint8, encoding: big5encoding) {
+        return str
         let aa = str.removingPercentEncoding
         return aa!.removingPercentEncoding
     }else{

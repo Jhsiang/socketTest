@@ -31,44 +31,28 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // string to Uint8Array tested
-        let aa = "中\n 中"
-        let arr:[UInt8] = Array(aa.utf8)
-        DLog(message: arr.map{String($0, radix:16)})
-        DLog(message: arr)
-        print("")
-
-        /*
-        // Uint8Array to String test
-        let myArr:[UInt8] = [229, 156, 139]
-        if let str = convertUInt8ArrToStr(uint8: myArr){
-            DLog(message: str)
-            DLog(message: str.removingPercentEncoding)
-        }else{
-            DLog(message: "convert str fail")
+        displayLabel.adjustsFontSizeToFitWidth = true
+/*
+        do {
+            var aa:[UInt8] = [72, 84, 84, 80, 47, 49, 13, 10, 72, 84, 84, 80, 47, 49]
+            //var aa = totalArr
+            displayLabel.text = convertUInt8ArrToStr(uint8: aa)
+            var myBreak = true
+            DLog(message: aa.count)
+            while myBreak == true{
+                if let str = convertUInt8ArrToStr(uint8: aa){
+                    myBreak = false
+                    //displayLabel.text = str
+                    DLog(message: displayLabel.text!)
+                    DLog(message: str)
+                }else{
+                    aa.removeLast()
+                }
+            }
+            DLog(message: aa.count)
+            //DLog(message: convertUInt8ArrToStr(uint8: aa))
         }
-        print("")
-        */
-
-        // short test
-        let myArr2:[UInt8] = [72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 48, 32, 79, 75, 13, 10, 13, 10, 32, 32, 32, 32, 32, 163, 187, 32]
-        if let str = convertUInt8ArrToStr(uint8: myArr2){
-            DLog(message: str)
-            DLog(message: str.removingPercentEncoding)
-        }else{
-            DLog(message: "convert str fail")
-        }
-        print("")
-
-        // total test
-        if let str = convertUInt8ArrToStr(uint8: totalArr){
-            DLog(message: str)
-            DLog(message: str.removingPercentEncoding)
-        }else{
-            DLog(message: "convert str fail")
-        }
-
-
+ */
     }
 
     @IBAction func btnClick(_ sender: UIButton) {
@@ -98,31 +82,28 @@ class ViewController: UIViewController {
              let data:[UInt8] = [13] //return key(Enter)
              let result = self.client.send(data: data)
              */
-            DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+            let speed = 0.5
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*1) {
                 let data:[UInt8] = telnetDic["g"]!
                 let result = self.client.send(data: data)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*2) {
                 let data:[UInt8] = telnetDic["u"]!
                 let result = self.client.send(data: data)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now()+3) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*3) {
                 let data:[UInt8] = telnetDic["e"]!
                 let result = self.client.send(data: data)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now()+4) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*4) {
                 let data:[UInt8] = telnetDic["s"]!
                 let result = self.client.send(data: data)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*5) {
                 let data:[UInt8] = telnetDic["t"]!
                 let result = self.client.send(data: data)
             }
-//            DispatchQueue.main.asyncAfter(deadline: .now()+6) {
-//                let data:[UInt8] = telnetDic["."]!
-//                let result = self.client.send(data: data)
-//            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+7) {
+            DispatchQueue.main.asyncAfter(deadline: .now()+speed*6) {
                 let data:[UInt8] = telnetDic["enter"]!
                 let result = self.client.send(data: data)
             }
