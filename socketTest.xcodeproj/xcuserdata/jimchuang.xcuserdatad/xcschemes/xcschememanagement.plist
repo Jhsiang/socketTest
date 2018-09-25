@@ -7,7 +7,25 @@
 		<key>socketTest.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>0FD5EDEF2112E0AB005538E8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0FD5EE032112E0AD005538E8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>0FD5EE0E2112E0AD005538E8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

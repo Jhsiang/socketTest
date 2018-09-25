@@ -8,132 +8,247 @@
 
 import UIKit
 import SwiftSocket
+import SwiftyTimer
 
-//import Darwin.ncurses
 
 
-let address1 = "140.112.172.1"
-let address2 = "140.112.172.2"
-let address5 = "140.112.172.5"
-let address11 = "140.112.172.11"
-
-let port:Int32 = 23
-
-class ViewController: UIViewController {
+class ViewController: UIViewController,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource {
 
     let client = TCPClient(address: address1, port: port)
 
-    @IBOutlet var readBtn: UIButton!
-    @IBOutlet var enterBtn: UIButton!
+    var mylogArr = Array<String>()
+
+    @IBOutlet var loginBtn: UIButton!
     @IBOutlet var connectBtn: UIButton!
 
-    @IBOutlet var displayLabel: UILabel!
+    @IBOutlet var leftBtn: UIButton!
+    @IBOutlet var upBtn: UIButton!
+    @IBOutlet var downBtn: UIButton!
+    @IBOutlet var rightBtn: UIButton!
+    @IBOutlet var enterBtn: UIButton!
+
+    @IBOutlet var displayView: UIView!
+    var myScrollView = UIScrollView()
+    var myLabel = UILabel()
+    var tempStr = ""
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        displayLabel.adjustsFontSizeToFitWidth = true
-/*
-        do {
-            var aa:[UInt8] = [72, 84, 84, 80, 47, 49, 13, 10, 72, 84, 84, 80, 47, 49]
-            //var aa = totalArr
-            displayLabel.text = convertUInt8ArrToStr(uint8: aa)
-            var myBreak = true
-            DLog(message: aa.count)
-            while myBreak == true{
-                if let str = convertUInt8ArrToStr(uint8: aa){
-                    myBreak = false
-                    //displayLabel.text = str
-                    DLog(message: displayLabel.text!)
-                    DLog(message: str)
-                }else{
-                    aa.removeLast()
-                }
-            }
-            DLog(message: aa.count)
-            //DLog(message: convertUInt8ArrToStr(uint8: aa))
+        
+
+        // Account save
+        if let arr = UserDefaults.standard.array(forKey: saveKeyUtf8){
+            mylogArr = arr as! Array<String>
         }
- */
+
+        let leftSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        leftSwipe.direction = .left
+        let rightSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        rightSwipe.direction = .right
+        let upSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        upSwipe.direction = .up
+        let downSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        downSwipe.direction = .down
+
+        let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(whenTap))
+        let doubleTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(whenDTap))
+        doubleTap.numberOfTapsRequired = 2
+        tap.require(toFail: doubleTap)
+
+        self.view.addGestureRecognizer(leftSwipe)
+        self.view.addGestureRecognizer(rightSwipe)
+        self.view.addGestureRecognizer(upSwipe)
+        self.view.addGestureRecognizer(downSwipe)
+        self.view.addGestureRecognizer(tap)
+        self.view.addGestureRecognizer(doubleTap)
+
     }
 
-    @IBAction func btnClick(_ sender: UIButton) {
-        switch sender {
+    override func viewDidAppear(_ animated: Bool) {
 
-        case readBtn:
-            if var data = client.read(1024*10){
-                DLog(message: "data count = \(data.count)")
-                var myBreak = true
-                while myBreak == true{
-                    if let string = convertUInt8ArrToStr(uint8: data){
-                        displayLabel.text = string
-                        print(string)
-                        myBreak = false
-                    } else {
-                        data.removeLast()
+        //Btn layout
+        upBtn.setImage(Graphics.getUpImage(), for: UIControlState.normal)
+        downBtn.setImage(Graphics.getDownImage(), for: UIControlState.normal)
+        leftBtn.setImage(Graphics.getLeftImage(), for: UIControlState.normal)
+        rightBtn.setImage(Graphics.getRightImage(), for: UIControlState.normal)
+        enterBtn.setImage(Graphics.getEnterImage(), for: UIControlState.normal)
+
+        myLabel.numberOfLines = 0
+        myLabel.textColor = .white
+
+        myScrollView.frame = CGRect(x: 0, y: 0, width: displayView.frame.width, height: displayView.frame.height)
+        myScrollView.contentSize = CGSize(width: displayView.frame.width * 5, height: displayView.frame.height)
+        myLabel.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: myScrollView.contentSize)
+        self.myScrollView.addSubview(myLabel)
+        self.displayView.addSubview(myScrollView)
+        connect()
+
+    }
+
+    func getLSizeOfLabel() {
+        //let width = myLabel.intrinsicContentSize.width
+        //DLog(message: width)
+        myLabel.frame = CGRect(origin: CGPoint(x: 0, y: 0), size: myScrollView.contentSize)
+        myLabel.sizeToFit()
+        myScrollView.contentOffset.x = 0
+        myScrollView.contentOffset.y = 0
+    }
+
+    //MARK: - Gesture
+    @objc func whenTap(sender:UITapGestureRecognizer){
+        //let sendStr = "enter"
+        //sendData(str: sendStr, Enter: true)
+        read()
+    }
+
+    @objc func whenDTap(){
+        if tempStr == ""{
+            tempStr = self.myLabel.text!
+            self.myLabel.text = ""
+            self.view.alpha = 0.05
+            getLSizeOfLabel()
+        }else{
+            self.myLabel.text = tempStr
+            tempStr = ""
+            self.view.alpha = 1
+            getLSizeOfLabel()
+        }
+    }
+
+    @objc func direct(sender:UISwipeGestureRecognizer){
+        var data = [UInt8]()
+        if sender.direction == .left{
+            data = telnetDic["left"]!
+            DLog(message: "left")
+        }else if sender.direction == .up{
+            data = telnetDic["up"]!
+            DLog(message: "up")
+        }else if sender.direction == .right{
+            data = telnetDic["right"]!
+            DLog(message: "right")
+        }else if sender.direction == .down{
+            data = telnetDic["down"]!
+            DLog(message: "down")
+        }
+
+        let aa = self.client.send(data: data)
+        if aa.isSuccess{
+                self.read()
+        }else{
+            DLog(message: "send fail")
+        }
+    }
+
+
+    //MARK: - Button Click
+
+
+    @IBAction func btnClick(_ sender: UIButton) {
+        var data = [UInt8]()
+        switch sender {
+        case loginBtn:
+            if mylogArr.count == 2{
+                for i in mylogArr{
+                    if client.send(string: i).isSuccess{
+                    }
+                    if client.send(data: [13]).isSuccess{
                     }
                 }
-                //DLog(message: data)
-                DLog(message: "data count = \(data.count)")
-            }else{
-                DLog(message: "my fail read")
+                if client.send(string: "y").isSuccess{
+                }
+                if client.send(data: [13]).isSuccess{
+                }
             }
-
-        case enterBtn:
-            /*
-             let data:[UInt8] = [13] //return key(Enter)
-             let result = self.client.send(data: data)
-             */
-            let speed = 0.5
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*1) {
-                let data:[UInt8] = telnetDic["g"]!
-                let result = self.client.send(data: data)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*2) {
-                let data:[UInt8] = telnetDic["u"]!
-                let result = self.client.send(data: data)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*3) {
-                let data:[UInt8] = telnetDic["e"]!
-                let result = self.client.send(data: data)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*4) {
-                let data:[UInt8] = telnetDic["s"]!
-                let result = self.client.send(data: data)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*5) {
-                let data:[UInt8] = telnetDic["t"]!
-                let result = self.client.send(data: data)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now()+speed*6) {
-                let data:[UInt8] = telnetDic["enter"]!
-                let result = self.client.send(data: data)
-            }
-            break
+            read()
+            return
 
         case connectBtn:
             connect()
+            return
+
+        case upBtn:
+            data = telnetDic["up"]!
+        case downBtn:
+            data = telnetDic["down"]!
+        case rightBtn:
+            data = telnetDic["right"]!
+        case leftBtn:
+            data = telnetDic["left"]!
+        case enterBtn:
+            data = [13]
 
         default:
             DLog(message: "btn click fail")
         }
-    }
 
-
-    func connect(){
-        switch client.connect(timeout: 10) {
-        case .success:
-            DLog(message: "connect success")
-        case .failure(let error):
-            DLog(message: error)
-        default:
-            DLog(message: "Unknow issue")
+        let succesCheck = self.client.send(data: data)
+        if succesCheck.isSuccess{
+            self.read()
+        }else{
+            DLog(message: "send fail")
         }
     }
 
+    //MARK: - TCP Function
+    func read(){
+        Timer.after(0.5) {
+            if var data = self.client.read(2048*10){
+                DLog(message: "data count = \(data.count)")
+                var myBreak = true
+                var removeCount = 0
+                while myBreak == true{
+                    if let str = convertUInt8ArrToStr(uint8: data){
+                        var noAnsiStr:String? = ""
+                        let _ = escapeCodesForString(escapedString: str, cleanString: &noAnsiStr)
+                        self.myLabel.text = noAnsiStr!
+                        print(noAnsiStr!)
+                        self.getLSizeOfLabel()
+                        myBreak = false
+                    } else {
+                        data.removeLast()
+                        removeCount += 1
+                    }
+                }
+            }else{
+                DLog(message: "my fail read")
+            }
+        }
+    }
+
+    func sendData(str:String,Enter:Bool){
+        if !Enter{
+            let strArr = Array(str)
+            let speed = 0.2
+            for i in 0...strArr.count - 1{
+                DispatchQueue.main.asyncAfter(deadline: .now()+speed*Double(i)) {
+                    let data:[UInt8] = telnetDic[String(strArr[i])]!
+                    _ = self.client.send(data: data)
+                }
+            }
+        }else{
+            let data:[UInt8] = telnetDic["enter"]!
+            _ = client.send(data: data)
+        }
+    }
+
+    func connect(){
+        client.close()
+        switch client.connect(timeout: 10) {
+        case .success:
+            myLabel.text = "connect success"
+            DLog(message: "connect success")
+            read()
+        case .failure(let error):
+            myLabel.text = "\(error)"
+            DLog(message: error)
+        }
+    }
 
     func echoService(client: TCPClient) {
         print("Newclient from:\(client.address)[\(client.port)]")
-        var d = client.read(1024*10)
-        client.send(data: d!)
+        let d = client.read(1024*10)
+        _ = client.send(data: d!)
         client.close()
     }
 
@@ -142,7 +257,7 @@ class ViewController: UIViewController {
         switch server.listen() {
         case .success:
             while true {
-                if var client = server.accept() {
+                if let client = server.accept() {
                     echoService(client: client)
                 } else {
                     print("accept error")
@@ -153,11 +268,21 @@ class ViewController: UIViewController {
         }
     }
 
+    //MARK: - My Function
+
+    //MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell()
+        return cell
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
-
 }
-
