@@ -50,7 +50,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
     }
 
     func responseStr(str: String) {
-       DLog(message: str)
+       //DLog(message: str)
     }
 
     func saveBoard(str:String){

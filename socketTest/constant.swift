@@ -26,8 +26,19 @@ let Board_Delete_Str = "本文已"
 let Board_Main_Text = "※\u{1B} 發信站: 批踢踢實業坊(ptt.cc),"
 let Board_Sub_Text = "\u{1B}: "
 
+//SubTableView
+let pushKeyStr = "\u{1B}推 \u{1B}"
+let bullShitKeyStr = "\u{1B}噓 \u{1B}"
+let arrowKeyStr = "\u{1B}→\u{1B} \u{1B}"
+let nameEndKeyStr = "\u{1B}: "
+let endKeyStr = "\u{1B}"
+
 var favoriteArrKey = Array<String>()
 var favoriteArrValue = Array<String>()
 var selectIndex = 0
 var selectSubjectStr = ""
 
+//{1B}推 \u{1B}wet00428\u{1B}: 夜店                                     \u{1B}
+//{1B}推 \u{1B}STi2011\u{1B}: 酒店       \u{1B}
+//\u{1B}→\u{1B} \u{1B}chao0210\u{1B}: 八卦版                                \u{1B}
+//{1B}噓 \u{1B}pieceiori\u{1B}: 幹! 乾脆吸它自己的懶叫好了            \u{1B}

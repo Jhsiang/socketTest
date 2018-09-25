@@ -10,6 +10,7 @@ import UIKit
 
 class SubjectTableViewController: UITableViewController,TelnetDelegate {
 
+    var totalText = ""
     var myTextArr = Array<String>()
 
     override func viewDidLoad() {
@@ -29,13 +30,84 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
             if Telnet.share.sendString(str: searchSubject){
                 if Telnet.share.sendData(data: [13]){
                     if Telnet.share.sendData(data: telnetDic["right"]!){
+
+                        // 讀取所有分頁存至TotalText
                         refreshLabel(str: Telnet.share.nowStr)
                         while !Telnet.share.nowStr.contains(get100percentStr){
                             addRefreshLabel()
                         }
-                        var mainText = getMainText(str: myTextArr[0])
+
+                        // 分割原文
+                        var mainText = getMainText(str: totalText)
                         mainText = removeDash(str: mainText)
-                        myTextArr[0] = mainText
+                        myTextArr.append(mainText)
+
+                        // 分割推文
+                        var subText = totalText
+                        while subText.contains(pushKeyStr) || subText.contains(bullShitKeyStr) || subText.contains(arrowKeyStr){
+
+                            // 判斷優先權
+                            var selectIndex = 0
+                            var rangeNum = 999999
+                            if let range = subText.range(of: pushKeyStr){
+                                let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
+                                rangeNum = nowNum
+                                selectIndex = 1
+                            }
+
+                            if let range = subText.range(of: bullShitKeyStr){
+                                let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
+                                if nowNum < rangeNum{
+                                    rangeNum = nowNum
+                                    selectIndex = 2
+                                }
+                            }
+
+                            if let range = subText.range(of: arrowKeyStr){
+                                let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
+                                if nowNum < rangeNum{
+                                    rangeNum = nowNum
+                                    selectIndex = 3
+                                }
+                            }
+
+                            var keyWord = ""
+                            var title = ""
+                            var name = ""
+                            var text = ""
+
+                            switch selectIndex{
+                            case 1:
+                                keyWord = pushKeyStr
+                                title = "推"
+                            case 2:
+                                keyWord = bullShitKeyStr
+                                title = "噓"
+                            case 3:
+                                keyWord = arrowKeyStr
+                                title = "→"
+                            default:
+                                keyWord = pushKeyStr
+                            }
+
+                            // 加入評價
+                            if let range = subText.range(of: keyWord){
+                                var spareStr = String(subText[range.upperBound..<subText.endIndex])
+                                if let rangeName = spareStr.range(of: nameEndKeyStr){
+                                    name = String(spareStr[spareStr.startIndex..<rangeName.lowerBound])
+                                    spareStr = String(spareStr[rangeName.upperBound..<spareStr.endIndex])
+                                }
+                                if let rangeText = spareStr.range(of: endKeyStr){
+                                    text = String(spareStr[spareStr.startIndex..<rangeText.lowerBound])
+                                    spareStr = String(spareStr[rangeText.upperBound..<spareStr.endIndex])
+                                }
+                                let addArrEle = title + " " + name + ":" + text
+                                myTextArr.append(addArrEle)
+                                subText = spareStr
+                            }
+                        }
+
+                        // 資料重載
                         self.tableView.reloadData()
                     }
                 }
@@ -45,7 +117,14 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
 
     func refreshLabel(str:String) {
         let removeStr = removeReviewPageString(str: str)
-        myTextArr.append(removeStr)
+        totalText = removeStr
+    }
+
+    func addRefreshLabel(){
+        if Telnet.share.sendData(data: telnetDic["right"]!){
+            let addStr = removeReviewPageString(str: Telnet.share.nowStr)
+            totalText += addStr
+        }
     }
 
     func getMainText(str:String) -> String{
@@ -58,16 +137,16 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         return myStr
     }
 
+    func getSubText(str:String) -> String{
+        var myStr = str
+
+
+        return myStr
+    }
+
     func removeDash(str:String) -> String{
         let resultStr = str.replacingOccurrences(of: "\u{08}\u{08}─\u{1B}  \u{08}\u{08}─\u{1B}", with: "")
         return resultStr
-    }
-
-    func addRefreshLabel(){
-        if Telnet.share.sendData(data: telnetDic["right"]!){
-            let addStr = removeReviewPageString(str: Telnet.share.nowStr)
-            myTextArr[0] = myTextArr[0] + addStr
-        }
     }
 
     func removeReviewPageString(str:String) -> String{
@@ -98,8 +177,6 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         super.didReceiveMemoryWarning()
 
     }
-
-
 
     // MARK: - Table view data source
 
