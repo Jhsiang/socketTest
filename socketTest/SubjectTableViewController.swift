@@ -93,16 +93,27 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                             // 加入評價
                             if let range = subText.range(of: keyWord){
                                 var spareStr = String(subText[range.upperBound..<subText.endIndex])
+
+                                // name
                                 if let rangeName = spareStr.range(of: nameEndKeyStr){
                                     name = String(spareStr[spareStr.startIndex..<rangeName.lowerBound])
                                     spareStr = String(spareStr[rangeName.upperBound..<spareStr.endIndex])
+                                }else if let rangeName = spareStr.range(of: nameEndKeyStr2){
+                                    name = String(spareStr[spareStr.startIndex..<rangeName.lowerBound])
+                                    spareStr = String(spareStr[rangeName.upperBound..<spareStr.endIndex])
                                 }
+
+                                // text
                                 if let rangeText = spareStr.range(of: endKeyStr){
                                     text = String(spareStr[spareStr.startIndex..<rangeText.lowerBound])
                                     spareStr = String(spareStr[rangeText.upperBound..<spareStr.endIndex])
                                 }
+
+                                // sum
                                 let addArrEle = title + " " + name + ":" + text
                                 myTextArr.append(addArrEle)
+
+                                // update
                                 subText = spareStr
                             }
                         }
@@ -195,10 +206,21 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "subject_cell", for: indexPath)
         cell.textLabel?.numberOfLines = 0
         cell.textLabel?.textColor = .white
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
         cell.backgroundColor = .black
         cell.textLabel?.text = myTextArr[indexPath.row]
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
         cell.isUserInteractionEnabled = false
+
+        switch myTextArr[indexPath.row].first {
+        case "推":
+            cell.backgroundColor = UIColor(red: 0, green: 1, blue: 0, alpha: 0.4)
+        case "噓":
+            cell.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5)
+        case "→":
+            cell.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.3)
+        default:
+            break
+        }
 
         return cell
     }

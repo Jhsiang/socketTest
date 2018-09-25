@@ -31,6 +31,7 @@ let pushKeyStr = "\u{1B}推 \u{1B}"
 let bullShitKeyStr = "\u{1B}噓 \u{1B}"
 let arrowKeyStr = "\u{1B}→\u{1B} \u{1B}"
 let nameEndKeyStr = "\u{1B}: "
+let nameEndKeyStr2 = "\u{1B}\u{1B}"
 let endKeyStr = "\u{1B}"
 
 var favoriteArrKey = Array<String>()

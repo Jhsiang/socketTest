@@ -51,20 +51,24 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                                     {
                                         if !Telnet.share.nowStr.contains(mainCheck){
                                             if Telnet.share.sendData(data: [13]){
-                                                if Telnet.share.sendData(data: telnetDic["up"]!){
-                                                    if Telnet.share.sendData(data: telnetDic["right"]!){
-                                                        saveFavorite(str: Telnet.share.nowStr)
+                                                if Telnet.share.sendData(data: telnetDic["F"]!){
+                                                    if Telnet.share.sendData(data: telnetDic["F"]!){
+                                                        if Telnet.share.sendData(data: telnetDic["enter"]!){
+                                                            saveFavorite(str: Telnet.share.nowStr)
+                                                        }
                                                     }
                                                 }
                                             }
                                         }else{
-                                            if Telnet.share.sendData(data: telnetDic["up"]!){
-                                                if Telnet.share.sendData(data: telnetDic["right"]!){
-                                                    saveFavorite(str: Telnet.share.nowStr)
+                                            if Telnet.share.sendData(data: telnetDic["F"]!){
+                                                if Telnet.share.sendData(data: telnetDic["F"]!){
+                                                    if Telnet.share.sendData(data: telnetDic["enter"]!){
+                                                        saveFavorite(str: Telnet.share.nowStr)
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
+                                }
 
 /*
                                 if Telnet.share.nowStr.contains(repeatLoginStr){

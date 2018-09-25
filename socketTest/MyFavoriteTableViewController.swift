@@ -13,11 +13,10 @@ class MyFavoriteTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+    }
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    override func viewWillAppear(_ animated: Bool) {
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -26,7 +25,6 @@ class MyFavoriteTableViewController: UITableViewController {
         }else{
             Telnet.share.speed = 0.2
         }
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -49,8 +47,11 @@ class MyFavoriteTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favorite_cell", for: indexPath)
-        cell.textLabel?.text = "\(favoriteArrKey[indexPath.row])"
-        cell.detailTextLabel?.text = "\(favoriteArrValue[indexPath.row])"
+
+        if favoriteArrKey.count != 0 && favoriteArrValue.count != 0{
+            cell.textLabel?.text = "\(favoriteArrKey[indexPath.row])"
+            cell.detailTextLabel?.text = "\(favoriteArrValue[indexPath.row])"
+        }
 
         cell.textLabel?.textColor = .white
         cell.detailTextLabel?.textColor = .white
