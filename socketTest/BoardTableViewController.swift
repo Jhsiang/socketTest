@@ -36,7 +36,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
                     }else{
                         saveBoard(str: Telnet.share.nowStr)
                     }
-                    Telnet.share.speed = 0.01
+                    Telnet.share.speed = 0.05
                     for _ in 0...3{
                         if Telnet.share.sendData(data: telnetDic["pageUp"]!){
                             saveBoard(str: Telnet.share.nowStr)
@@ -59,6 +59,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
 
     func saveBoard(str:String){
         var valueStr = str
+        var tempArr = Array<String>()
         while valueStr.contains(startStr) || valueStr.contains(startStrOfRe){
 
             // 判斷新主題關鍵字
@@ -87,7 +88,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
 
                     // 確認主題加入
                     if !boardStr.contains(Board_Delete_Str) && boardStr.count != 0 {
-                        boardArr.append(boardStr)
+                        tempArr.append(boardStr)
                     }
                 }
 
@@ -121,7 +122,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
 
                     // 確認主題加入
                     if !boardStr.contains(Board_Delete_Str) && boardStr.count != 0 {
-                        boardArr.append(boardStr)
+                        tempArr.append(boardStr)
                     }
                 }
 
@@ -129,19 +130,29 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
                 valueStr = String(tempStr)
             }
         }
+        tempArr.reverse()
+        for i in tempArr{
+            boardArr.append(i)
+        }
         self.tableView.reloadData()
         print("board count = \(boardArr.count)")
 
     }
 
+    //MARK: - Btn Click
     @IBAction func backBtn(_ sender: UIBarButtonItem) {
-        if Telnet.share.sendData(data: telnetDic["left"]!){
-            self.navigationController?.popViewController(animated: true)
+        goBack()
+    }
+
+    //MARK: - gesture
+    @objc func direct(sender:UISwipeGestureRecognizer){
+        if sender.direction == .right{
+            goBack()
         }
     }
 
-    @objc func direct(sender:UISwipeGestureRecognizer){
-        if sender.direction == .right{
+    func goBack(){
+        if Telnet.share.sendData(data: telnetDic["end"]!){
             if Telnet.share.sendData(data: telnetDic["left"]!){
                 self.navigationController?.popViewController(animated: true)
             }

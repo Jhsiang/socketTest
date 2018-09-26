@@ -125,7 +125,7 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                             }
                         }
                         for i in myTextArr{
-                            print(i)
+                            //print(i)
                         }
                         // 資料重載
                         self.tableView.reloadData()

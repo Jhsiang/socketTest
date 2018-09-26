@@ -38,8 +38,3 @@ var favoriteArrKey = Array<String>()
 var favoriteArrValue = Array<String>()
 var selectIndex = 0
 var selectSubjectStr = ""
-
-//{1B}推 \u{1B}wet00428\u{1B}: 夜店                                     \u{1B}
-//{1B}推 \u{1B}STi2011\u{1B}: 酒店       \u{1B}
-//\u{1B}→\u{1B} \u{1B}chao0210\u{1B}: 八卦版                                \u{1B}
-//{1B}噓 \u{1B}pieceiori\u{1B}: 幹! 乾脆吸它自己的懶叫好了            \u{1B}
