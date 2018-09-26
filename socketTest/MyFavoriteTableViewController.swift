@@ -48,11 +48,13 @@ class MyFavoriteTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "favorite_cell", for: indexPath)
 
-        if favoriteArrKey.count != 0 && favoriteArrValue.count != 0{
+        if favoriteArrKey.indices ~= indexPath.row{
             cell.textLabel?.text = "\(favoriteArrKey[indexPath.row])"
+        }
+        if favoriteArrValue.indices ~= indexPath.row{
             cell.detailTextLabel?.text = "\(favoriteArrValue[indexPath.row])"
         }
-
+        
         cell.textLabel?.textColor = .white
         cell.detailTextLabel?.textColor = .white
 

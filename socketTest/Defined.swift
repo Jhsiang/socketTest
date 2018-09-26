@@ -32,14 +32,14 @@ func convertStrToUInt8Arr(str:String) -> [UInt8]{
 func convertUInt8ArrToStr(uint8:[UInt8]) -> String? {
 
     var myUInt8 = uint8
-    DLog(message: "before data count = \(myUInt8.count)")
+    //DLog(message: "before data count = \(myUInt8.count)")
     let cfEnc = CFStringEncodings.big5
     let nsEnc = CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cfEnc.rawValue))
     let big5encoding = String.Encoding(rawValue: nsEnc) // String.Encoding
 
     while myUInt8.count > 0 {
         if let str = String(bytes: myUInt8, encoding: .utf8){
-            DLog(message: "after data count = \(myUInt8.count)")
+            //DLog(message: "after data count = \(myUInt8.count)")
             return str
         }else{
             myUInt8.removeLast()

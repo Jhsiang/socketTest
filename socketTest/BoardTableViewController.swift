@@ -18,6 +18,10 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let rightSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        rightSwipe.direction = .right
+        self.view.addGestureRecognizer(rightSwipe)
+
         DLog(message: favoriteArrKey[selectIndex])
         Telnet.share.delegate = self
         let indexStr = String(selectIndex + 1)
@@ -133,6 +137,14 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
     @IBAction func backBtn(_ sender: UIBarButtonItem) {
         if Telnet.share.sendData(data: telnetDic["left"]!){
             self.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    @objc func direct(sender:UISwipeGestureRecognizer){
+        if sender.direction == .right{
+            if Telnet.share.sendData(data: telnetDic["left"]!){
+                self.navigationController?.popViewController(animated: true)
+            }
         }
     }
 

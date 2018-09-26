@@ -15,6 +15,13 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let rightSwipe:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(direct(sender:)))
+        rightSwipe.direction = .right
+        self.view.addGestureRecognizer(rightSwipe)
+
+        let doubleTap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(whenDTap))
+        doubleTap.numberOfTapsRequired = 2
+        self.view.addGestureRecognizer(doubleTap)
 
     }
 
@@ -117,7 +124,9 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                                 subText = spareStr
                             }
                         }
-
+                        for i in myTextArr{
+                            print(i)
+                        }
                         // 資料重載
                         self.tableView.reloadData()
                     }
@@ -148,12 +157,6 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         return myStr
     }
 
-    func getSubText(str:String) -> String{
-        var myStr = str
-
-
-        return myStr
-    }
 
     func removeDash(str:String) -> String{
         let resultStr = str.replacingOccurrences(of: "\u{08}\u{08}─\u{1B}  \u{08}\u{08}─\u{1B}", with: "")
@@ -174,6 +177,31 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         //DLog(message: str)
     }
 
+
+    //MARK: - Gesture
+    @objc func direct(sender:UISwipeGestureRecognizer){
+        if sender.direction == .right{
+            // 搜索模式 -> 兩次跳出
+            if Telnet.share.sendData(data: telnetDic["left"]!){
+                if Telnet.share.sendData(data: telnetDic["left"]!){
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
+    }
+
+    @objc func whenDTap(){
+        let myView = UIView(frame: self.tableView.frame)
+        myView.backgroundColor = .black
+        myView.tag = 888
+        if let viewTag = self.tableView.viewWithTag(888){
+            viewTag.removeFromSuperview()
+        }else{
+            self.tableView.addSubview(myView)
+        }
+    }
+
+    //MARK: - Button Click
     @IBAction func backBtnClick(_ sender: UIBarButtonItem) {
         // 搜索模式 -> 兩次跳出
         if Telnet.share.sendData(data: telnetDic["left"]!){
@@ -182,7 +210,6 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
             }
         }
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -208,9 +235,12 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
         cell.textLabel?.textColor = .white
         cell.backgroundColor = .black
         cell.textLabel?.text = myTextArr[indexPath.row]
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
         cell.isUserInteractionEnabled = false
 
+        if indexPath.row > 0 {
+            cell.textLabel?.font = cell.textLabel?.font.withSize(20)
+            cell.textLabel?.text = "\(indexPath.row)F " + myTextArr[indexPath.row]
+        }
         switch myTextArr[indexPath.row].first {
         case "推":
             cell.backgroundColor = UIColor(red: 0, green: 1, blue: 0, alpha: 0.4)

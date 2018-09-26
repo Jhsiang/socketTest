@@ -42,7 +42,7 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                                         if Telnet.share.sendString(str: "y"){
                                             if Telnet.share.sendData(data: telnetDic["up"]!){
                                                 if Telnet.share.sendData(data: telnetDic["right"]!){
-                                                    saveFavorite(str: Telnet.share.nowStr)
+                                                    saveFavorite(str: Telnet.share.nowStr, index: 1)
                                                 }
                                             }
                                         }
@@ -54,7 +54,17 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                                                 if Telnet.share.sendData(data: telnetDic["F"]!){
                                                     if Telnet.share.sendData(data: telnetDic["F"]!){
                                                         if Telnet.share.sendData(data: telnetDic["enter"]!){
-                                                            saveFavorite(str: Telnet.share.nowStr)
+                                                            saveFavorite(str: Telnet.share.nowStr, index: 1)
+                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                saveFavorite(str: Telnet.share.nowStr, index: 2)
+                                                                if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                    saveFavorite(str: Telnet.share.nowStr, index: 3)
+                                                                    if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                        saveFavorite(str: Telnet.share.nowStr, index: 4)
+                                                                        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -63,7 +73,17 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                                             if Telnet.share.sendData(data: telnetDic["F"]!){
                                                 if Telnet.share.sendData(data: telnetDic["F"]!){
                                                     if Telnet.share.sendData(data: telnetDic["enter"]!){
-                                                        saveFavorite(str: Telnet.share.nowStr)
+                                                        saveFavorite(str: Telnet.share.nowStr, index: 1)
+                                                        if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                            saveFavorite(str: Telnet.share.nowStr, index: 2)
+                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                saveFavorite(str: Telnet.share.nowStr, index: 3)
+                                                                if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                    saveFavorite(str: Telnet.share.nowStr, index: 4)
+                                                                    self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -98,10 +118,21 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
         }
     }
 
-    func saveFavorite(str:String){
+    func saveFavorite(str:String, index:Int){
         print("save")
-        for i in 1...100{
-            if let range = str.range(of: "\(i)   "){
+        let from = 1 + (index - 1) * 20
+        let end = 20 + (index - 1) * 20
+        for i in from...end{
+            if let range = str.range(of: "\(i)   \u{08}\u{08}\u{1B}ˇ\u{1B}\u{1B}"){
+                let startIndex = range.upperBound
+                let tempStr = str[startIndex..<str.endIndex]
+                if let range2 = tempStr.range(of: " "){
+                    let endIndex = range2.lowerBound
+                    var favoriteStr = String(str[startIndex..<endIndex])
+                    favoriteStr = favoriteStr.replacingOccurrences(of: "ˇ", with: "")
+                    favoriteArrKey.append(favoriteStr)
+                }
+            }else if let range = str.range(of: "\(i)   \u{1B}"){
                 let startIndex = range.upperBound
                 let tempStr = str[startIndex..<str.endIndex]
                 if let range2 = tempStr.range(of: " "){
@@ -130,15 +161,10 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
             }
         }
 
-//        for x in 0...favoriteArrKey.count - 1{
-//            print(favoriteArrKey[x])
-//            print(favoriteArrValue[x])
-//        }
-
         print("key count = \(favoriteArrKey.count)")
         print("value count = \(favoriteArrValue.count)")
 
-        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+        //self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
     }
 
     //MARK: - TelenetDelegate
