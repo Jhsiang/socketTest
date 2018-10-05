@@ -281,9 +281,6 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <connections>
-                                    <segue destination="BB2-d6-4S4" kind="push" id="FKB-gy-5xc"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -298,6 +295,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="BB2-d6-4S4" kind="push" identifier="seque_board_to_subject" id="SIc-LG-REc"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="09b-Ab-ZMI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

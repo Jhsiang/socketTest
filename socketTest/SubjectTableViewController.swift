@@ -37,7 +37,10 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
             if Telnet.share.sendString(str: searchSubject){
                 if Telnet.share.sendData(data: [13]){
                     if Telnet.share.sendData(data: telnetDic["right"]!){
-
+//        if Telnet.share.sendString(str: selectSubjectStr){
+//            if Telnet.share.sendData(data: [13]){
+//                if Telnet.share.sendData(data: telnetDic["right"]!){
+//                    if true{
                         // 讀取所有分頁存至TotalText
                         refreshLabel(str: Telnet.share.nowStr)
                         while !Telnet.share.nowStr.contains(get100percentStr){
@@ -54,19 +57,19 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                         while subText.contains(pushKeyStr) || subText.contains(bullShitKeyStr) || subText.contains(arrowKeyStr){
 
                             // 判斷優先權
-                            var selectIndex = 0
+                            var select = 0
                             var rangeNum = 999999
                             if let range = subText.range(of: pushKeyStr){
                                 let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
                                 rangeNum = nowNum
-                                selectIndex = 1
+                                select = 1
                             }
 
                             if let range = subText.range(of: bullShitKeyStr){
                                 let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
                                 if nowNum < rangeNum{
                                     rangeNum = nowNum
-                                    selectIndex = 2
+                                    select = 2
                                 }
                             }
 
@@ -74,7 +77,7 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                                 let nowNum = subText.distance(from: subText.startIndex, to: range.upperBound)
                                 if nowNum < rangeNum{
                                     rangeNum = nowNum
-                                    selectIndex = 3
+                                    select = 3
                                 }
                             }
 
@@ -83,7 +86,7 @@ class SubjectTableViewController: UITableViewController,TelnetDelegate {
                             var name = ""
                             var text = ""
 
-                            switch selectIndex{
+                            switch select{
                             case 1:
                                 keyWord = pushKeyStr
                                 title = "推"

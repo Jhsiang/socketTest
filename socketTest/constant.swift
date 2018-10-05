@@ -25,6 +25,7 @@ let reviewPageStr = "瀏覽 第"
 let Board_Delete_Str = "本文已"
 let Board_Main_Text = "※\u{1B} 發信站: 批踢踢實業坊(ptt.cc),"
 let Board_Sub_Text = "\u{1B}: "
+let Board_Get_People = "人氣"
 
 //SubTableView
 let pushKeyStr = "\u{1B}推 \u{1B}"
@@ -38,3 +39,4 @@ var favoriteArrKey = Array<String>()
 var favoriteArrValue = Array<String>()
 var selectIndex = 0
 var selectSubjectStr = ""
+

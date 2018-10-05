@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F0A4E7E215C8D1B0035D111 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0A4E7D215C8D1B0035D111 /* Subject.swift */; };
 		0F388F9F214BA050001AC7C3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F388F9E214BA050001AC7C3 /* BoardViewController.swift */; };
 		0F388FA1214BAEB7001AC7C3 /* BoardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F388FA0214BAEB7001AC7C3 /* BoardTableViewController.swift */; };
 		0F49E66B214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F49E66A214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		096650B04D73C8A577716B72 /* Pods-socketTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socketTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-socketTest/Pods-socketTest.debug.xcconfig"; sourceTree = "<group>"; };
+		0F0A4E7D215C8D1B0035D111 /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
 		0F2C09AED734EB215D91CCB4 /* Pods-socketTestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socketTestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-socketTestTests/Pods-socketTestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0F388F9E214BA050001AC7C3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
 		0F388FA0214BAEB7001AC7C3 /* BoardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTableViewController.swift; sourceTree = "<group>"; };
@@ -153,6 +155,7 @@
 				0F49E66E214A535A00FFA5F6 /* LoadDataViewController.swift */,
 				0F4B70842154A55600DA6531 /* SubjectTableViewController.swift */,
 				0F49E670214A552500FFA5F6 /* Telnet.swift */,
+				0F0A4E7D215C8D1B0035D111 /* Subject.swift */,
 			);
 			path = socketTest;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 			files = (
 				0F388FA1214BAEB7001AC7C3 /* BoardTableViewController.swift in Sources */,
 				0F4B70852154A55600DA6531 /* SubjectTableViewController.swift in Sources */,
+				0F0A4E7E215C8D1B0035D111 /* Subject.swift in Sources */,
 				0F49F7AB2147B6C5008852BA /* Graphics.swift in Sources */,
 				0F388F9F214BA050001AC7C3 /* BoardViewController.swift in Sources */,
 				0F49E66B214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift in Sources */,

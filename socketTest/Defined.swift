@@ -8,6 +8,19 @@
 
 import Foundation
 
+//extension String{
+//    func substring(from index: Int) -> String {
+//        if self.characters.count > index {
+//            let startIndex = self.index(self.startIndex, offsetBy: index)
+//            let subString = self[startIndex..<self.endIndex]
+//
+//            return String(subString)
+//        } else {
+//            return self
+//        }
+//    }
+//}
+
 func DLog<T> (message: T, fileName: String = #file, funcName: String = #function, lineNum: Int = #line) {
 
     #if DEBUG

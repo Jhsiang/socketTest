@@ -35,41 +35,22 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                     if Telnet.share.sendData(data: [13]){
                         if Telnet.share.sendString(str: password){
                             if Telnet.share.sendData(data: [13]){
-                                    let isRepeate = Telnet.share.nowStr.contains(repeatLoginStr)
-                                    if isRepeate
-                                    {
-                                        DLog(message: "I am repeat")
-                                        if Telnet.share.sendString(str: "y"){
-                                            if Telnet.share.sendData(data: telnetDic["up"]!){
-                                                if Telnet.share.sendData(data: telnetDic["right"]!){
-                                                    saveFavorite(str: Telnet.share.nowStr, index: 1)
-                                                }
+                                let isRepeate = Telnet.share.nowStr.contains(repeatLoginStr)
+                                if isRepeate
+                                {
+                                    DLog(message: "I am repeat")
+                                    if Telnet.share.sendString(str: "y"){
+                                        if Telnet.share.sendData(data: telnetDic["up"]!){
+                                            if Telnet.share.sendData(data: telnetDic["right"]!){
+                                                saveFavorite(str: Telnet.share.nowStr, index: 1)
                                             }
                                         }
                                     }
-                                    else
-                                    {
-                                        if !Telnet.share.nowStr.contains(mainCheck){
-                                            if Telnet.share.sendData(data: [13]){
-                                                if Telnet.share.sendData(data: telnetDic["F"]!){
-                                                    if Telnet.share.sendData(data: telnetDic["F"]!){
-                                                        if Telnet.share.sendData(data: telnetDic["enter"]!){
-                                                            saveFavorite(str: Telnet.share.nowStr, index: 1)
-                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                saveFavorite(str: Telnet.share.nowStr, index: 2)
-                                                                if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                    saveFavorite(str: Telnet.share.nowStr, index: 3)
-                                                                    if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                        saveFavorite(str: Telnet.share.nowStr, index: 4)
-                                                                        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }else{
+                                }
+                                else
+                                {
+                                    if !Telnet.share.nowStr.contains(mainCheck){
+                                        if Telnet.share.sendData(data: [13]){
                                             if Telnet.share.sendData(data: telnetDic["F"]!){
                                                 if Telnet.share.sendData(data: telnetDic["F"]!){
                                                     if Telnet.share.sendData(data: telnetDic["enter"]!){
@@ -88,30 +69,30 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                                                 }
                                             }
                                         }
-                                }
-
-/*
-                                if Telnet.share.nowStr.contains(repeatLoginStr){
-                                    if Telnet.share.sendString(str: "y"){
-                                        if Telnet.share.sendData(data: [13]){
+                                    }else{
+                                        if Telnet.share.sendData(data: telnetDic["F"]!){
+                                            if Telnet.share.sendData(data: telnetDic["F"]!){
+                                                if Telnet.share.sendData(data: telnetDic["enter"]!){
+                                                    saveFavorite(str: Telnet.share.nowStr, index: 1)
+                                                    if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                        saveFavorite(str: Telnet.share.nowStr, index: 2)
+                                                        if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                            saveFavorite(str: Telnet.share.nowStr, index: 3)
+                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
+                                                                saveFavorite(str: Telnet.share.nowStr, index: 4)
+                                                                self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
-
-                                if Telnet.share.sendData(data: [13]){
-                                    if Telnet.share.sendData(data: telnetDic["up"]!){
-                                        if Telnet.share.sendData(data: telnetDic["right"]!){
-                                            saveFavorite(str: Telnet.share.nowStr)
-                                        }
-                                    }
-                                }
-*/
                             }
                         }
                     }
                 }
-
-
             }
         }else{
             DLog(message: "connect fail")
@@ -123,23 +104,44 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
         let from = 1 + (index - 1) * 20
         let end = 20 + (index - 1) * 20
         for i in from...end{
+
+            // 判斷優先權
+            var select = 0
+            var rangeNum = 999999
             if let range = str.range(of: "\(i)   \u{08}\u{08}\u{1B}ˇ\u{1B}\u{1B}"){
-                let startIndex = range.upperBound
-                let tempStr = str[startIndex..<str.endIndex]
-                if let range2 = tempStr.range(of: " "){
-                    let endIndex = range2.lowerBound
-                    var favoriteStr = String(str[startIndex..<endIndex])
-                    favoriteStr = favoriteStr.replacingOccurrences(of: "ˇ", with: "")
-                    favoriteArrKey.append(favoriteStr)
+                let nowNum = str.distance(from: str.startIndex, to: range.upperBound)
+                rangeNum = nowNum
+                select = 1
+            }
+            if let range = str.range(of: "\(i)   \u{1B}"){
+                let nowNum = str.distance(from: str.startIndex, to: range.upperBound)
+                if nowNum < rangeNum{
+                    rangeNum = nowNum
+                    select = 2
                 }
-            }else if let range = str.range(of: "\(i)   \u{1B}"){
-                let startIndex = range.upperBound
-                let tempStr = str[startIndex..<str.endIndex]
-                if let range2 = tempStr.range(of: " "){
-                    let endIndex = range2.lowerBound
-                    var favoriteStr = String(str[startIndex..<endIndex])
-                    favoriteStr = favoriteStr.replacingOccurrences(of: "ˇ", with: "")
-                    favoriteArrKey.append(favoriteStr)
+            }
+
+            if select == 1{
+                if let range = str.range(of: "\(i)   \u{08}\u{08}\u{1B}ˇ\u{1B}\u{1B}"){
+                    let startIndex = range.upperBound
+                    let tempStr = str[startIndex..<str.endIndex]
+                    if let range2 = tempStr.range(of: " "){
+                        let endIndex = range2.lowerBound
+                        var favoriteStr = String(str[startIndex..<endIndex])
+                        favoriteStr = favoriteStr.replacingOccurrences(of: "ˇ", with: "")
+                        favoriteArrKey.append(favoriteStr)
+                    }
+                }
+            }else if select == 2{
+                if let range = str.range(of: "\(i)   \u{1B}"){
+                    let startIndex = range.upperBound
+                    let tempStr = str[startIndex..<str.endIndex]
+                    if let range2 = tempStr.range(of: " "){
+                        let endIndex = range2.lowerBound
+                        var favoriteStr = String(str[startIndex..<endIndex])
+                        favoriteStr = favoriteStr.replacingOccurrences(of: "ˇ", with: "")
+                        favoriteArrKey.append(favoriteStr)
+                    }
                 }
             }else{
                 break
