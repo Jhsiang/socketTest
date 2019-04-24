@@ -18,6 +18,7 @@ class Telnet{
     var delegate:TelnetDelegate?
     let client = TCPClient(address: address1, port: port)
     var nowStr = ""
+    var nowStrArr = [String]()
     var speed:Float = 0.5
 
     func connectToTelenet() -> Bool{
@@ -56,15 +57,24 @@ class Telnet{
         let us = UInt32(speed * 1_000_000)
         usleep(us)
         if let data = self.client.read(2048*10){
+            /*
             if let str = convertUInt8ArrToStr(uint8: data){
                 var noAnsiStr:String? = ""
                 let _ = escapeCodesForString(escapedString: str, cleanString: &noAnsiStr)
                 self.delegate?.responseStr(str: noAnsiStr!)
                 nowStr = noAnsiStr!
+                nowStrArr.append(nowStr)
+            }
+ */
+            if let str = converUInt8ArrToStr2(unit8: data){
+                var noAnsiStr:String? = ""
+                let _ = escapeCodesForString(escapedString: str, cleanString: &noAnsiStr)
+                self.delegate?.responseStr(str: noAnsiStr!)
+                nowStr = noAnsiStr!
+                //nowStrArr.append(nowStr)
             }
         }else{
             self.delegate?.responseStr(str: READ_EMPTY)
-
         }
     }
 

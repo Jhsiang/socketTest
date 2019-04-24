@@ -150,14 +150,12 @@ class ViewController: UIViewController,UIScrollViewDelegate,UITableViewDelegate,
         case loginBtn:
             if mylogArr.count == 2{
                 for i in mylogArr{
-                    if client.send(string: i).isSuccess{
-                    }
-                    if client.send(data: [13]).isSuccess{
+                    if client.send(string: i).isSuccess,client.send(data: [13]).isSuccess{
+                        //print("login success")
                     }
                 }
-                if client.send(string: "y").isSuccess{
-                }
-                if client.send(data: [13]).isSuccess{
+                if client.send(string: "y").isSuccess,client.send(data: [13]).isSuccess{
+                    //print("clean repeate")
                 }
             }
             read()

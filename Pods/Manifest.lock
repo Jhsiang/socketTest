@@ -1,10 +1,12 @@
 PODS:
+  - CocoaAsyncSocket (7.6.3)
   - RainbowSwift (3.1.4)
   - SwiftSocket (2.0.2)
   - SwiftyJSON (4.1.0)
   - SwiftyTimer (2.0.0)
 
 DEPENDENCIES:
+  - CocoaAsyncSocket
   - RainbowSwift
   - SwiftSocket
   - SwiftyJSON
@@ -12,17 +14,19 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - CocoaAsyncSocket
     - RainbowSwift
     - SwiftSocket
     - SwiftyJSON
     - SwiftyTimer
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   RainbowSwift: 1cf3693f51ca408950fcd8ee7957fa5c8e269d43
   SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
   SwiftyTimer: 2efd74b060d69ad4f1496baf5bbedbe132125fcf
 
-PODFILE CHECKSUM: 7e8dd65ffd571b0c836f94878077c0ee4771974f
+PODFILE CHECKSUM: 32361a02f856ffe2b6b72d73fcd73af2752a812d
 
 COCOAPODS: 1.5.3

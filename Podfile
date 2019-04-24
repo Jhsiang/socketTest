@@ -11,6 +11,7 @@ target 'socketTest' do
 	pod 'SwiftyJSON'
     pod 'RainbowSwift'
     pod 'SwiftyTimer'
+    pod 'CocoaAsyncSocket'
 
   target 'socketTestTests' do
     inherit! :search_paths

@@ -14,6 +14,7 @@ let address5 = "140.112.172.5"
 let address11 = "140.112.172.11"
 
 let port:Int32 = 23
+let sshPort:Int32 = 22
 let saveKey = "pref_key_save"
 let saveKeyUtf8 = "pref_key_save_utf8"
 

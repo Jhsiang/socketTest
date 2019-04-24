@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0F0A4E7E215C8D1B0035D111 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0A4E7D215C8D1B0035D111 /* Subject.swift */; };
+		0F1686AD21FFE8B700F03F93 /* testViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F1686AC21FFE8B700F03F93 /* testViewController.swift */; };
+		0F1686AF21FFF0BB00F03F93 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F1686AE21FFF0BB00F03F93 /* Socket.swift */; };
 		0F388F9F214BA050001AC7C3 /* BoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F388F9E214BA050001AC7C3 /* BoardViewController.swift */; };
 		0F388FA1214BAEB7001AC7C3 /* BoardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F388FA0214BAEB7001AC7C3 /* BoardTableViewController.swift */; };
 		0F49E66B214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F49E66A214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift */; };
@@ -51,6 +53,8 @@
 /* Begin PBXFileReference section */
 		096650B04D73C8A577716B72 /* Pods-socketTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socketTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-socketTest/Pods-socketTest.debug.xcconfig"; sourceTree = "<group>"; };
 		0F0A4E7D215C8D1B0035D111 /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
+		0F1686AC21FFE8B700F03F93 /* testViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testViewController.swift; sourceTree = "<group>"; };
+		0F1686AE21FFF0BB00F03F93 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		0F2C09AED734EB215D91CCB4 /* Pods-socketTestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socketTestTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-socketTestTests/Pods-socketTestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		0F388F9E214BA050001AC7C3 /* BoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardViewController.swift; sourceTree = "<group>"; };
 		0F388FA0214BAEB7001AC7C3 /* BoardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTableViewController.swift; sourceTree = "<group>"; };
@@ -138,9 +142,10 @@
 		0FD5EDF22112E0AB005538E8 /* socketTest */ = {
 			isa = PBXGroup;
 			children = (
+				0F388F9E214BA050001AC7C3 /* BoardViewController.swift */,
+				0FD5EDF52112E0AB005538E8 /* ViewController.swift */,
 				0FD5EDF32112E0AB005538E8 /* AppDelegate.swift */,
 				0F49F7AA2147B6C5008852BA /* Graphics.swift */,
-				0FD5EDF52112E0AB005538E8 /* ViewController.swift */,
 				0FD5EDF72112E0AB005538E8 /* Main.storyboard */,
 				0FD5EDFA2112E0AC005538E8 /* Assets.xcassets */,
 				0FD5EDFC2112E0AC005538E8 /* LaunchScreen.storyboard */,
@@ -149,13 +154,14 @@
 				0F891AC321140C1000E51FE3 /* DataBase.swift */,
 				0F9CCF2C2119304300777D09 /* ANSI.swift */,
 				0F49E66A214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift */,
-				0F388F9E214BA050001AC7C3 /* BoardViewController.swift */,
 				0F388FA0214BAEB7001AC7C3 /* BoardTableViewController.swift */,
+				0F4B70842154A55600DA6531 /* SubjectTableViewController.swift */,
 				0F49E66C214A3EBC00FFA5F6 /* constant.swift */,
 				0F49E66E214A535A00FFA5F6 /* LoadDataViewController.swift */,
-				0F4B70842154A55600DA6531 /* SubjectTableViewController.swift */,
 				0F49E670214A552500FFA5F6 /* Telnet.swift */,
 				0F0A4E7D215C8D1B0035D111 /* Subject.swift */,
+				0F1686AC21FFE8B700F03F93 /* testViewController.swift */,
+				0F1686AE21FFF0BB00F03F93 /* Socket.swift */,
 			);
 			path = socketTest;
 			sourceTree = "<group>";
@@ -393,12 +399,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-socketTest/Pods-socketTest-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyTimer/SwiftyTimer.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaAsyncSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyTimer.framework",
@@ -415,9 +423,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0F1686AF21FFF0BB00F03F93 /* Socket.swift in Sources */,
 				0F388FA1214BAEB7001AC7C3 /* BoardTableViewController.swift in Sources */,
 				0F4B70852154A55600DA6531 /* SubjectTableViewController.swift in Sources */,
 				0F0A4E7E215C8D1B0035D111 /* Subject.swift in Sources */,
+				0F1686AD21FFE8B700F03F93 /* testViewController.swift in Sources */,
 				0F49F7AB2147B6C5008852BA /* Graphics.swift in Sources */,
 				0F388F9F214BA050001AC7C3 /* BoardViewController.swift in Sources */,
 				0F49E66B214A3B9300FFA5F6 /* MyFavoriteTableViewController.swift in Sources */,

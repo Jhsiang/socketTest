@@ -23,6 +23,18 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
         Telnet.share.delegate = self
     }
 
+    func send<T>(_ data:T) -> Bool{
+        if data is String{
+            return Telnet.share.sendString(str: data as! String)
+        }else if data is [UInt8]{
+            return Telnet.share.sendData(data: data as! [UInt8])
+        }else if data is [Int]{
+            let data = data as! [Int]
+            return Telnet.share.sendData(data: data.map{UInt8(abs($0) % 256)})
+        }
+        return false
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         Telnet.share.disConnect()
         if Telnet.share.connectToTelenet(){
@@ -31,72 +43,83 @@ class LoadDataViewController: UIViewController,TelnetDelegate {
                 let password = arr[1] as! String
                 var mainCheck = account
                 mainCheck.removeLast()
-                if Telnet.share.sendString(str: account){
-                    if Telnet.share.sendData(data: [13]){
-                        if Telnet.share.sendString(str: password){
-                            if Telnet.share.sendData(data: [13]){
-                                let isRepeate = Telnet.share.nowStr.contains(repeatLoginStr)
-                                if isRepeate
-                                {
-                                    DLog(message: "I am repeat")
-                                    if Telnet.share.sendString(str: "y"){
-                                        if Telnet.share.sendData(data: telnetDic["up"]!){
-                                            if Telnet.share.sendData(data: telnetDic["right"]!){
-                                                saveFavorite(str: Telnet.share.nowStr, index: 1)
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if !Telnet.share.nowStr.contains(mainCheck){
-                                        if Telnet.share.sendData(data: [13]){
-                                            if Telnet.share.sendData(data: telnetDic["F"]!){
-                                                if Telnet.share.sendData(data: telnetDic["F"]!){
-                                                    if Telnet.share.sendData(data: telnetDic["enter"]!){
-                                                        saveFavorite(str: Telnet.share.nowStr, index: 1)
-                                                        if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                            saveFavorite(str: Telnet.share.nowStr, index: 2)
-                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                saveFavorite(str: Telnet.share.nowStr, index: 3)
-                                                                if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                    saveFavorite(str: Telnet.share.nowStr, index: 4)
-                                                                    self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }else{
-                                        if Telnet.share.sendData(data: telnetDic["F"]!){
-                                            if Telnet.share.sendData(data: telnetDic["F"]!){
-                                                if Telnet.share.sendData(data: telnetDic["enter"]!){
-                                                    saveFavorite(str: Telnet.share.nowStr, index: 1)
-                                                    if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                        saveFavorite(str: Telnet.share.nowStr, index: 2)
-                                                        if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                            saveFavorite(str: Telnet.share.nowStr, index: 3)
-                                                            if Telnet.share.sendData(data: telnetDic["pageDown"]!){
-                                                                saveFavorite(str: Telnet.share.nowStr, index: 4)
-                                                                self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+
+                // Login
+                if send(account),send([13]),send(password),send([13]),send("F"){
+                    while Telnet.share.nowStr == "read_EMPTY"{
+                        if send([13]){
+                            DLog(message: "Enter Now")
+                        }else{
+                            DLog(message: "Break Now")
+                            break
                         }
+                    }
+
+                    if Telnet.share.nowStr.contains(repeatLoginStr){
+                        repeateHandle()
+                    }else if Telnet.share.nowStr.contains(mainCheck){
+                        mainHandle()
+                    }else{
+                        elseHandle()
                     }
                 }
             }
         }else{
             DLog(message: "connect fail")
         }
+    }
+
+    func repeateHandle(){
+        DLog(message: "I am repeat")
+
+        if send([8]),send([8]),send("Y"),send([13]),send(["F"]),send(["F"]),send([13]){
+            saveFavorite(str: Telnet.share.nowStr, index: 1)
+            if send(telnetDic["pageDown"]){
+                saveFavorite(str: Telnet.share.nowStr, index: 2)
+                if send(telnetDic["pageDown"]){
+                    saveFavorite(str: Telnet.share.nowStr, index: 3)
+                    if send(telnetDic["pageDown"]){
+                        saveFavorite(str: Telnet.share.nowStr, index: 4)
+                    }
+                }
+            }
+        }
+
+        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+    }
+
+    func mainHandle(){
+        DLog(message: "I am Main check")
+        if send("F"),send("F"),send([13]){
+            saveFavorite(str: Telnet.share.nowStr, index: 1)
+            if send(telnetDic["pageDown"]){
+                saveFavorite(str: Telnet.share.nowStr, index: 2)
+                if send(telnetDic["pageDown"]){
+                    saveFavorite(str: Telnet.share.nowStr, index: 3)
+                    if send(telnetDic["pageDown"]){
+                        saveFavorite(str: Telnet.share.nowStr, index: 4)
+                    }
+                }
+            }
+        }
+        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
+    }
+
+    func elseHandle(){
+        DLog(message: "I am else")
+        if send("F"),send("F"),send([13]){
+            saveFavorite(str: Telnet.share.nowStr, index: 1)
+            if send(telnetDic["pageDown"]){
+                saveFavorite(str: Telnet.share.nowStr, index: 2)
+                if send(telnetDic["pageDown"]){
+                    saveFavorite(str: Telnet.share.nowStr, index: 3)
+                    if send(telnetDic["pageDown"]){
+                        saveFavorite(str: Telnet.share.nowStr, index: 4)
+                    }
+                }
+            }
+        }
+        self.performSegue(withIdentifier: "seque_load_to_favorite", sender: nil)
     }
 
     func saveFavorite(str:String, index:Int){

@@ -106,7 +106,7 @@ class BoardTableViewController: UITableViewController,TelnetDelegate {
         var realStr = str
         realStr = realStr.replacingOccurrences(of: "\u{1B}", with: "\\u{1B}")
         realStr = realStr.replacingOccurrences(of: "\u{08}", with: "\\u{08}")
-        print(realStr)
+        //print(realStr)
 
         // 記錄首篇文章代號
         if textNumber.count == 0 {
